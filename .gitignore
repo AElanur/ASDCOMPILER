@@ -22,7 +22,7 @@ release.properties
 ## IntelliJ
 ##########################
 *.iml
-.idea/
+startcode/.idea/
 *.ipr
 *.iws
 out/
