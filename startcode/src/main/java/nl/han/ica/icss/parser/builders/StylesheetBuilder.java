@@ -1,8 +1,6 @@
 package nl.han.ica.icss.parser.builders;
 
-import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.AST;
-import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Stylesheet;
 import nl.han.ica.icss.parser.ASTListener;
 import nl.han.ica.icss.parser.ICSSParser;
@@ -19,7 +17,7 @@ public class StylesheetBuilder {
     }
 
     public void exitStylesheet(ICSSParser.StylesheetContext ctx) {
-        AST ast = listener.getAst();
+        AST ast = listener.getAST();
         ast.setRoot((Stylesheet) listener.getHANStack().pop());
     }
 }

@@ -30,7 +30,7 @@ public class ASTListener extends ICSSBaseListener {
 		currentContainer = new HANStack<>();
 	}
 
-	public AST getAst() {
+	public AST getAST() {
 		return ast;
 	}
 
