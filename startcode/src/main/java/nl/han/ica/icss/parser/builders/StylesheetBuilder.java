@@ -6,18 +6,18 @@ import nl.han.ica.icss.parser.ASTListener;
 import nl.han.ica.icss.parser.ICSSParser;
 
 public class StylesheetBuilder {
-    private final ASTListener listener;
+    private final BuilderContext ctx;
 
-    public StylesheetBuilder(ASTListener listener) {
-        this.listener = listener;
+    public StylesheetBuilder(BuilderContext ctx) {
+        this.ctx = ctx;
     }
 
-    public void enterStylesheet(ICSSParser.StylesheetContext ctx) {
-        listener.getHANStack().push(new Stylesheet());
+    public void enterStylesheet() {
+        ctx.push(new Stylesheet());
     }
 
-    public void exitStylesheet(ICSSParser.StylesheetContext ctx) {
-        AST ast = listener.getAST();
-        ast.setRoot((Stylesheet) listener.getHANStack().pop());
+    public void exitStylesheet() {
+        AST ast = ctx.getAST();
+        ast.setRoot((Stylesheet) ctx.pop());
     }
 }
