@@ -1,18 +1,24 @@
-package nl.han.ica.icss.parser;
+package nl.han.ica.icss.parser.listener;
 
+import nl.han.ica.datastructures.HANStack;
+import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.AST;
+import nl.han.ica.icss.ast.ASTNode;
+import nl.han.ica.icss.parser.ICSSBaseListener;
+import nl.han.ica.icss.parser.ICSSParser;
 import nl.han.ica.icss.parser.builders.*;
 
 public class ASTListener extends ICSSBaseListener {
-	private final BuilderContext ctx = new BuilderContext();
-	private final DeclarationBuilder decalBuilder = new DeclarationBuilder(ctx);
-	private final ExpressionBuilder expBuilder = new ExpressionBuilder(ctx);
-	private final LiteralBuilder litBuilder = new LiteralBuilder(ctx);
-	private final RuleBuilder ruleBuilder = new RuleBuilder(ctx);
-	private final StylesheetBuilder styleBuilder = new StylesheetBuilder(ctx);
+	private IHANStack<ASTNode> stack = new HANStack<>();
+	private AST ast = new AST();
+	private final DeclarationBuilder decalBuilder = new DeclarationBuilder(stack);
+	private final ExpressionBuilder expBuilder = new ExpressionBuilder(stack);
+	private final LiteralBuilder litBuilder = new LiteralBuilder(stack);
+	private final RuleBuilder ruleBuilder = new RuleBuilder(stack);
+	private final StylesheetBuilder styleBuilder = new StylesheetBuilder(stack, ast);
 
 	public AST getAST() {
-		return ctx.getAST();
+		return ast;
 	}
 
 	@Override
@@ -44,12 +50,12 @@ public class ASTListener extends ICSSBaseListener {
 		expBuilder.enterVariableReference(ctx);
 	}
 
-	@Override public void enterDecleration(ICSSParser.DeclerationContext ctx) {
-		decalBuilder.enterDecleration(ctx);
+	@Override public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
+		decalBuilder.enterDeclaration(ctx);
 	}
 
-	@Override public void exitDecleration(ICSSParser.DeclerationContext ctx) {
-		decalBuilder.exitDecleration(ctx);
+	@Override public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
+		decalBuilder.exitDeclaration(ctx);
 	}
 
 	@Override public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {

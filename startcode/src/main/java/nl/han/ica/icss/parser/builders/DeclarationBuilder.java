@@ -1,31 +1,33 @@
 package nl.han.ica.icss.parser.builders;
 
+import nl.han.ica.datastructures.IHANStack;
+import nl.han.ica.icss.ast.ASTNode;
 import nl.han.ica.icss.ast.Declaration;
 import nl.han.ica.icss.ast.VariableAssignment;
-import nl.han.ica.icss.parser.BuilderContext;
-import nl.han.ica.icss.parser.ICSSBaseListener;
 import nl.han.ica.icss.parser.ICSSParser;
 
 public class DeclarationBuilder {
-    private final BuilderContext builder;
+    private IHANStack<ASTNode> stack;
 
-    public DeclarationBuilder(BuilderContext builder) {
-        this.builder = builder;
+    public DeclarationBuilder(IHANStack<ASTNode> stack) {
+        this.stack = stack;
     }
     
-    public void enterDecleration(ICSSParser.DeclerationContext ctx) {
-        builder.push(new Declaration());
+    public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
+        Declaration decl = new Declaration();
+        stack.push(decl);
     }
-    
-    public void exitDecleration(ICSSParser.DeclerationContext ctx) {
-        builder.peek().addChild(builder.pop());
+
+    public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
+        Declaration decl = (Declaration) stack.pop();
+        stack.peek().addChild(decl);
     }
 
     public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-        builder.push(new VariableAssignment());
+        stack.push(new VariableAssignment());
     }
 
     public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-        builder.peek().addChild(builder.pop());
+        stack.peek().addChild(stack.pop());
     }
 }

@@ -51,8 +51,8 @@ variableAssignment: variableReference ASSIGNMENT_OPERATOR expression SEMICOLON;
 
 variableReference: CAPITAL_IDENT;
 
-ruleBody: OPEN_BRACE (decleration | ifClause | variableAssignment)* CLOSE_BRACE;
-decleration: propertyName COLON expression SEMICOLON;
+ruleBody: OPEN_BRACE (declaration | ifClause | variableAssignment)* CLOSE_BRACE;
+declaration: propertyName COLON expression SEMICOLON;
 propertyName: LOWER_IDENT;
 
 expression: literal | variableReference | expression MUL expression | expression (PLUS | MIN) expression;
