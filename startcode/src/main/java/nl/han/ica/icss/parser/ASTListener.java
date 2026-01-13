@@ -1,32 +1,23 @@
 package nl.han.ica.icss.parser;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Stack;
-
-
-import nl.han.ica.datastructures.HANStack;
-import nl.han.ica.datastructures.IHANStack;
-import nl.han.ica.icss.ast.*;
-import nl.han.ica.icss.ast.literals.*;
-import nl.han.ica.icss.parser.builders.BuilderContext;
-import nl.han.ica.icss.parser.builders.ExpressionBuilder;
-import nl.han.ica.icss.parser.builders.RuleBuilder;
-import nl.han.ica.icss.parser.builders.StylesheetBuilder;
-
+import nl.han.ica.icss.ast.AST;
+import nl.han.ica.icss.parser.builders.*;
 
 public class ASTListener extends ICSSBaseListener {
 	private final BuilderContext ctx = new BuilderContext();
+	private final DeclarationBuilder decalBuilder = new DeclarationBuilder(ctx);
+	private final ExpressionBuilder expBuilder = new ExpressionBuilder(ctx);
+	private final LiteralBuilder litBuilder = new LiteralBuilder(ctx);
+	private final RuleBuilder ruleBuilder = new RuleBuilder(ctx);
+	private final StylesheetBuilder styleBuilder = new StylesheetBuilder(ctx);
 
-	private final StylesheetBuilder styleBuilder = new StylesheetBuilder(this);
-	private final RuleBuilder ruleBuilder = new RuleBuilder(this);
-	private final ExpressionBuilder exprBuilder = new ExpressionBuilder(this);
+	public AST getAST() {
+		return ctx.getAST();
+	}
 
 	@Override
 	public void enterStylesheet(ICSSParser.StylesheetContext ctx) {
-		styleBuilder.enterStylesheet();
+		styleBuilder.enterStylesheet(ctx);
 	}
 
 	@Override public void exitStylesheet(ICSSParser.StylesheetContext ctx) {
@@ -38,51 +29,51 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void exitStyleRule(ICSSParser.StyleRuleContext ctx) {
-		ruleBuilder.exitSyleRule(ctx);
+		ruleBuilder.exitStyleRule(ctx);
 	}
 
 	@Override public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-		ruleBuilder.enterVariableAssignment(ctx);
+		decalBuilder.enterVariableAssignment(ctx);
 	}
 
 	@Override public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-		ruleBuilder.exitVariableAssignment(ctx);
+		decalBuilder.exitVariableAssignment(ctx);
 	}
 
 	@Override public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
-		exprBuilder.enterVariableReference(ctx);
+		expBuilder.enterVariableReference(ctx);
 	}
 
 	@Override public void enterDecleration(ICSSParser.DeclerationContext ctx) {
-		ruleBuilder.enterDeclaration(ctx);
+		decalBuilder.enterDecleration(ctx);
 	}
 
 	@Override public void exitDecleration(ICSSParser.DeclerationContext ctx) {
-		ruleBuilder.exitDeclaration(ctx);
+		decalBuilder.exitDecleration(ctx);
 	}
 
 	@Override public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {
-		exprBuilder.enterPropertyName(ctx);
+		expBuilder.enterPropertyName(ctx);
 	}
 
 	@Override public void enterBoolLiteral(ICSSParser.BoolLiteralContext ctx) {
-		exprBuilder.enterBoolLiteral(ctx);
+		litBuilder.enterBoolLiteral(ctx);
 	}
 
 	@Override public void enterColorLiteral(ICSSParser.ColorLiteralContext ctx) {
-		exprBuilder.enterColorLiteral(ctx);
+		litBuilder.enterColorLiteral(ctx);
 	}
 
 	@Override public void enterPercentageLiteral(ICSSParser.PercentageLiteralContext ctx) {
-		exprBuilder.enterPercentageLiteral(ctx);
+		litBuilder.enterPercentageLiteral(ctx);
 	}
 
 	@Override public void enterPixelLiteral(ICSSParser.PixelLiteralContext ctx) {
-		exprBuilder.enterPixelLiteral(ctx);
+		litBuilder.enterPixelLiteral(ctx);
 	}
 
 	@Override public void enterScalarLiteral(ICSSParser.ScalarLiteralContext ctx) {
-		exprBuilder.enterScalarLiteral(ctx);
+		litBuilder.enterScalarLiteral(ctx);
 	}
 
 	@Override public void enterClassSelector(ICSSParser.ClassSelectorContext ctx) {
@@ -90,7 +81,7 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
-		ruleBuilder.enterClassSelector(ctx);
+		ruleBuilder.exitClassSelector(ctx);
 	}
 
 	@Override public void enterIdSelector(ICSSParser.IdSelectorContext ctx) {
@@ -111,31 +102,30 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterExpression(ICSSParser.ExpressionContext ctx) {
-		exprBuilder.enterExpression(ctx);
+		expBuilder.enterExpression(ctx);
 	}
 	@Override
 	public void exitExpression(ICSSParser.ExpressionContext ctx) {
-		exprBuilder.exitExpresssion(ctx);
+		expBuilder.exitExpression(ctx);
 	}
 
 	@Override
 	public void enterIfClause(ICSSParser.IfClauseContext ctx) {
-		exprBuilder.enterIfClause(ctx);
+		expBuilder.enterIfClause(ctx);
 	}
 
 	@Override
 	public void exitIfClause(ICSSParser.IfClauseContext ctx) {
-		exprBuilder.exitIfClause(ctx);
+		expBuilder.exitIfClause(ctx);
 	}
 
 	@Override
 	public void enterElseClause(ICSSParser.ElseClauseContext ctx) {
-		exprBuilder.enterElseClause(ctx);
+		expBuilder.enterElseClause(ctx);
 	}
 
 	@Override
 	public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
-		exprBuilder.exitElseClause(ctx);
+		expBuilder.exitElseClause(ctx);
 	}
-
 }

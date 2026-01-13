@@ -4,9 +4,13 @@ public class HANStack<T> implements IHANStack<T> {
 
     IHANLinkedList<T> list;
 
+    public HANStack() {
+        list = new HANLinkedList<>();
+    }
+
     @Override
     public void push(T value) {
-        list = new HANLinkedList<>();
+        list.addFirst(value);
     }
 
     @Override
