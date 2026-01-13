@@ -20,37 +20,34 @@ public class RuleBuilder {
     }
 
     public void exitStyleRule(ICSSParser.StyleRuleContext ctx) {
-        Stylerule rule = (Stylerule) stack.pop();
-        stack.peek().addChild(rule);
+        var node = stack.pop();
+        stack.peek().addChild(node);
     }
 
     public void enterClassSelector(ICSSParser.ClassSelectorContext ctx) {
-       stack.push(new ClassSelector(ctx.getText()));
+        stack.push(new ClassSelector(ctx.getText()));
     }
 
-    
     public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
         var temp = stack.pop();
         stack.peek().addChild(temp);
     }
 
-    
     public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
         stack.push(new TagSelector(ctx.getText()));
     }
 
-    
     public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
-        stack.peek().addChild(stack.pop());
+        var node = stack.pop();
+        stack.peek().addChild(node);
     }
 
-    
     public void enterIdSelector(ICSSParser.IdSelectorContext ctx) {
         stack.push(new IdSelector(ctx.getText()));
     }
 
-    
     public void exitIdSelector(ICSSParser.IdSelectorContext ctx) {
-        stack.peek().addChild(stack.pop());
+        var node = stack.pop();
+        stack.peek().addChild(node);
     }
 }

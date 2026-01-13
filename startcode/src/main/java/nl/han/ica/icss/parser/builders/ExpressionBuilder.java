@@ -7,6 +7,8 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.parser.ICSSParser;
 
+import java.util.Objects;
+
 public class ExpressionBuilder {
     private IHANStack<ASTNode> stack;
 
@@ -17,17 +19,21 @@ public class ExpressionBuilder {
     public void enterExpression(ICSSParser.ExpressionContext ctx) {
         if(ctx.getChildCount() == 3) {
             var operator = ctx.getChild(1).getText();
-            switch (operator) {
-                case "*" -> stack.push(new MultiplyOperation());
-                case "+" -> stack.push(new AddOperation());
-                case "-" -> stack.push(new SubtractOperation());
-            }
+            System.out.println(Objects.equals(operator, "*"));
+            System.out.println(Objects.equals(operator, "+"));
+            stack.push(switch (operator) {
+                case "*" -> new MultiplyOperation();
+                case "+" -> new AddOperation();
+                case "-" -> new SubtractOperation();
+                default -> throw new IllegalStateException("Unexpected value: " + operator);
+            });
         }
     }
     
     public void exitExpression(ICSSParser.ExpressionContext ctx) {
         if (ctx.getChildCount() == 3) {
-            stack.peek().addChild(stack.pop());
+            var node = stack.pop();
+            stack.peek().addChild(node);
         }
     }
 
@@ -52,6 +58,7 @@ public class ExpressionBuilder {
     }
     
     public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
-        stack.peek().addChild(new VariableReference(ctx.getText()));
+        VariableReference variabelRef = new VariableReference(ctx.getText());
+        stack.peek().addChild(variabelRef);
     }
 }

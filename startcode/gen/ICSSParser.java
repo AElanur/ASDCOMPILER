@@ -22,7 +22,7 @@ public class ICSSParser extends Parser {
 		SEMICOLON=18, COLON=19, PLUS=20, MIN=21, MUL=22, ASSIGNMENT_OPERATOR=23;
 	public static final int
 		RULE_stylesheet = 0, RULE_styleRule = 1, RULE_variableAssignment = 2, 
-		RULE_variableReference = 3, RULE_ruleBody = 4, RULE_decleration = 5, RULE_propertyName = 6, 
+		RULE_variableReference = 3, RULE_ruleBody = 4, RULE_declaration = 5, RULE_propertyName = 6, 
 		RULE_expression = 7, RULE_literal = 8, RULE_boolLiteral = 9, RULE_colorLiteral = 10, 
 		RULE_percentageLiteral = 11, RULE_pixelLiteral = 12, RULE_scalarLiteral = 13, 
 		RULE_selector = 14, RULE_classSelector = 15, RULE_idSelector = 16, RULE_tagSelector = 17, 
@@ -30,7 +30,7 @@ public class ICSSParser extends Parser {
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"stylesheet", "styleRule", "variableAssignment", "variableReference", 
-			"ruleBody", "decleration", "propertyName", "expression", "literal", "boolLiteral", 
+			"ruleBody", "declaration", "propertyName", "expression", "literal", "boolLiteral", 
 			"colorLiteral", "percentageLiteral", "pixelLiteral", "scalarLiteral", 
 			"selector", "classSelector", "idSelector", "tagSelector", "ifClause", 
 			"elseClause"
@@ -342,11 +342,11 @@ public class ICSSParser extends Parser {
 	public static class RuleBodyContext extends ParserRuleContext {
 		public TerminalNode OPEN_BRACE() { return getToken(ICSSParser.OPEN_BRACE, 0); }
 		public TerminalNode CLOSE_BRACE() { return getToken(ICSSParser.CLOSE_BRACE, 0); }
-		public List<DeclerationContext> decleration() {
-			return getRuleContexts(DeclerationContext.class);
+		public List<DeclarationContext> declaration() {
+			return getRuleContexts(DeclarationContext.class);
 		}
-		public DeclerationContext decleration(int i) {
-			return getRuleContext(DeclerationContext.class,i);
+		public DeclarationContext declaration(int i) {
+			return getRuleContext(DeclarationContext.class,i);
 		}
 		public List<IfClauseContext> ifClause() {
 			return getRuleContexts(IfClauseContext.class);
@@ -399,7 +399,7 @@ public class ICSSParser extends Parser {
 				case LOWER_IDENT:
 					{
 					setState(65);
-					decleration();
+					declaration();
 					}
 					break;
 				case IF:
@@ -438,7 +438,7 @@ public class ICSSParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class DeclerationContext extends ParserRuleContext {
+	public static class DeclarationContext extends ParserRuleContext {
 		public PropertyNameContext propertyName() {
 			return getRuleContext(PropertyNameContext.class,0);
 		}
@@ -447,28 +447,28 @@ public class ICSSParser extends Parser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public TerminalNode SEMICOLON() { return getToken(ICSSParser.SEMICOLON, 0); }
-		public DeclerationContext(ParserRuleContext parent, int invokingState) {
+		public DeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_decleration; }
+		@Override public int getRuleIndex() { return RULE_declaration; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).enterDecleration(this);
+			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).enterDeclaration(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitDecleration(this);
+			if ( listener instanceof ICSSListener ) ((ICSSListener)listener).exitDeclaration(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitDecleration(this);
+			if ( visitor instanceof ICSSVisitor ) return ((ICSSVisitor<? extends T>)visitor).visitDeclaration(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final DeclerationContext decleration() throws RecognitionException {
-		DeclerationContext _localctx = new DeclerationContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_decleration);
+	public final DeclarationContext declaration() throws RecognitionException {
+		DeclarationContext _localctx = new DeclarationContext(_ctx, getState());
+		enterRule(_localctx, 10, RULE_declaration);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{

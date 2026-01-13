@@ -57,15 +57,15 @@ public interface ICSSListener extends ParseTreeListener {
 	 */
 	void exitRuleBody(ICSSParser.RuleBodyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ICSSParser#decleration}.
+	 * Enter a parse tree produced by {@link ICSSParser#declaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterDecleration(ICSSParser.DeclerationContext ctx);
+	void enterDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ICSSParser#decleration}.
+	 * Exit a parse tree produced by {@link ICSSParser#declaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitDecleration(ICSSParser.DeclerationContext ctx);
+	void exitDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ICSSParser#propertyName}.
 	 * @param ctx the parse tree

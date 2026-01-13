@@ -27,8 +27,11 @@ public class Generator {
 	}
 
 	private void generateStyleRule(Stylerule stylerule, StringBuilder sb) {
+		if (stylerule.selectors == null || stylerule.selectors.isEmpty()) {
+			System.err.println("Skipping rule with no selectors: " + stylerule);
+			return;
+		}
 		var selector = stylerule.selectors.get(0).toString();
-		System.out.println("Here's the selector " + selector);
 		sb.append(selector).append(" {\n");
 		for (var child : stylerule.body) {
 			generateDeclaration((Declaration) child, sb);

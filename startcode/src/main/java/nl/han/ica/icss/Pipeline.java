@@ -4,7 +4,7 @@ import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.checker.Checker;
 import nl.han.ica.icss.checker.SemanticError;
 import nl.han.ica.icss.generator.Generator;
-import nl.han.ica.icss.parser.listener.ASTListener;
+import nl.han.ica.icss.parser.ASTListener;
 import nl.han.ica.icss.parser.ICSSLexer;
 import nl.han.ica.icss.parser.ICSSParser;
 import nl.han.ica.icss.transforms.Evaluator;

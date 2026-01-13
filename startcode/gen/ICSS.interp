@@ -56,7 +56,7 @@ styleRule
 variableAssignment
 variableReference
 ruleBody
-decleration
+declaration
 propertyName
 expression
 literal

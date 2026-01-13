@@ -1,11 +1,9 @@
-package nl.han.ica.icss.parser.listener;
+package nl.han.ica.icss.parser;
 
 import nl.han.ica.datastructures.HANStack;
 import nl.han.ica.datastructures.IHANStack;
 import nl.han.ica.icss.ast.AST;
 import nl.han.ica.icss.ast.ASTNode;
-import nl.han.ica.icss.parser.ICSSBaseListener;
-import nl.han.ica.icss.parser.ICSSParser;
 import nl.han.ica.icss.parser.builders.*;
 
 public class ASTListener extends ICSSBaseListener {

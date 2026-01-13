@@ -28,6 +28,7 @@ public class DeclarationBuilder {
     }
 
     public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-        stack.peek().addChild(stack.pop());
+        var node = stack.pop();
+        stack.peek().addChild(node);
     }
 }

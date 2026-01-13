@@ -41,9 +41,6 @@ MIN: '-';
 MUL: '*';
 ASSIGNMENT_OPERATOR: ':=';
 
-
-
-
 //--- PARSER: ---
 stylesheet: variableAssignment* styleRule* EOF;
 styleRule: selector ruleBody;

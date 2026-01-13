@@ -24,4 +24,9 @@ public class HANStack<T> implements IHANStack<T> {
     public T peek() {
         return list.getFirst();
     }
+
+    @Override
+    public boolean isEmpty() {
+        return list.getFirst() == null;
+    }
 }

@@ -76,13 +76,13 @@ public class ICSSBaseListener implements ICSSListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecleration(ICSSParser.DeclerationContext ctx) { }
+	@Override public void enterDeclaration(ICSSParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecleration(ICSSParser.DeclerationContext ctx) { }
+	@Override public void exitDeclaration(ICSSParser.DeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

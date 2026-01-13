@@ -40,11 +40,11 @@ public interface ICSSVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRuleBody(ICSSParser.RuleBodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ICSSParser#decleration}.
+	 * Visit a parse tree produced by {@link ICSSParser#declaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDecleration(ICSSParser.DeclerationContext ctx);
+	T visitDeclaration(ICSSParser.DeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ICSSParser#propertyName}.
 	 * @param ctx the parse tree
