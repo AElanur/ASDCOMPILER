@@ -1,8 +1,6 @@
 package nl.han.ica.icss.transforms;
 
-import com.google.errorprone.annotations.Var;
 import nl.han.ica.datastructures.HANLinkedList;
-import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
 import nl.han.ica.icss.ast.literals.BoolLiteral;
 import nl.han.ica.icss.ast.literals.PercentageLiteral;
@@ -13,8 +11,6 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Evaluator implements Transform {
 
@@ -45,7 +41,10 @@ public class Evaluator implements Transform {
                     transformDeclaration((Declaration) child, scopeVars);
                     temp.add(child);
                 }
-                case IfClause i -> temp.addAll(transformIfClause((IfClause) child, scopeVars));
+                case IfClause i -> {
+                    transformIfClause(i, scopeVars);  // Transform IN-PLACE
+                    temp.add(i);
+                }
                 default -> throw new IllegalStateException("Unexpected value: " + child);
             }
         }
@@ -60,7 +59,7 @@ public class Evaluator implements Transform {
         declaration.expression = transformExpression(declaration.expression, scopeVars);
     }
 
-    private ArrayList<ASTNode> transformIfClause(IfClause ifClause, HANLinkedList<VariableAssignment> scopeVars) {
+    private void transformIfClause(IfClause ifClause, HANLinkedList<VariableAssignment> scopeVars) {
         ifClause.conditionalExpression = transformExpression(ifClause.conditionalExpression, scopeVars);
 
         assert ifClause.conditionalExpression != null;
@@ -72,7 +71,7 @@ public class Evaluator implements Transform {
             }
         }
         ifClause.elseClause= null;
-        return transformRuleBody(ifClause.body, scopeVars);
+        transformRuleBody(ifClause.body, scopeVars);
     }
 
     private Literal transformExpression(Expression expression, HANLinkedList<VariableAssignment> scopeVars) {
@@ -89,8 +88,7 @@ public class Evaluator implements Transform {
         Literal rightLiteral = transformExpression(operation.rhs, scopeVars);
 
         var leftValue = getLiteralValue(leftLiteral);
-        var rightValue= getLiteralValue(rightLiteral);;
-        System.out.println("value "+ leftValue + "|" + rightValue);
+        var rightValue= getLiteralValue(rightLiteral);
 
         return switch (operation) {
             case AddOperation ao -> createSumLiteral(leftLiteral, leftValue + rightValue);

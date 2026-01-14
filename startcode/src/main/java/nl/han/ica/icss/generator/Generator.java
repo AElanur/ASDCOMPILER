@@ -16,11 +16,8 @@ public class Generator {
 
 	private void generateStyleSheet(ASTNode styleSheet, StringBuilder sb) {
 		for (var child : styleSheet.getChildren()) {
-			if (child instanceof Stylerule) {
-				Stylerule rule = (Stylerule) child;
-				System.out.println("Generating rule for selectors: " + rule.selectors);
-				System.out.println("Body contains: " + rule.body.size() + " children");
-				generateStyleRule(rule, sb);
+			if (child instanceof Stylerule rule) {
+                generateStyleRule(rule, sb);
 				sb.append("\n\n");
 			}
 		}
@@ -31,7 +28,7 @@ public class Generator {
 			System.err.println("Skipping rule with no selectors: " + stylerule);
 			return;
 		}
-		var selector = stylerule.selectors.get(0).toString();
+		var selector = stylerule.selectors.getFirst().toString();
 		sb.append(selector).append(" {\n");
 		for (var child : stylerule.body) {
 			generateDeclaration((Declaration) child, sb);
@@ -44,8 +41,10 @@ public class Generator {
 	}
 
 	private String getLiteralValue(Expression literal){
-		if (literal instanceof PercentageLiteral) return ((PercentageLiteral) literal).value + "%";
-		if (literal instanceof PixelLiteral) return ((PixelLiteral) literal).value + "px";
-		return String.valueOf(((ColorLiteral) literal).value);
+		return switch (literal) {
+			case PercentageLiteral pel -> ((PercentageLiteral) literal).value + "%";
+			case PixelLiteral pil -> ((PixelLiteral) literal).value + "px";
+			default -> String.valueOf(((ColorLiteral) literal).value);
+		};
 	}
 }
