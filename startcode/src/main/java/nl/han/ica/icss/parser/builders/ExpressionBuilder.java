@@ -11,13 +11,14 @@ import java.util.Objects;
 
 public class ExpressionBuilder {
     private IHANStack<ASTNode> stack;
+    private final int sumExpression = 3;
 
     public ExpressionBuilder(IHANStack<ASTNode> stack) {
         this.stack = stack;
     }
     
     public void enterExpression(ICSSParser.ExpressionContext ctx) {
-        if(ctx.getChildCount() == 3) {
+        if(ctx.getChildCount() == sumExpression) {
             var operator = ctx.getChild(1).getText();
             stack.push(switch (operator) {
                 case "*" -> new MultiplyOperation();
@@ -29,7 +30,7 @@ public class ExpressionBuilder {
     }
     
     public void exitExpression(ICSSParser.ExpressionContext ctx) {
-        if (ctx.getChildCount() == 3) {
+        if (ctx.getChildCount() == sumExpression) {
             var node = stack.pop();
             stack.peek().addChild(node);
         }
@@ -56,7 +57,7 @@ public class ExpressionBuilder {
     }
     
     public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
-        VariableReference variabelRef = new VariableReference(ctx.getText());
-        stack.peek().addChild(variabelRef);
+        VariableReference variableRef = new VariableReference(ctx.getText());
+        stack.peek().addChild(variableRef);
     }
 }

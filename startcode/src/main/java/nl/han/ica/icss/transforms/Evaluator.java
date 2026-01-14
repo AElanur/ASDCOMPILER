@@ -1,5 +1,6 @@
 package nl.han.ica.icss.transforms;
 
+import com.google.errorprone.annotations.Var;
 import nl.han.ica.datastructures.HANLinkedList;
 import nl.han.ica.datastructures.IHANLinkedList;
 import nl.han.ica.icss.ast.*;
@@ -21,14 +22,13 @@ public class Evaluator implements Transform {
     public void apply(AST ast) {
         var globalVariables = new HANLinkedList<VariableAssignment>();
         for (var child : ast.root.getChildren()) {
-            if (child instanceof VariableAssignment) {
-                globalVariables.addFirst((VariableAssignment) child);
-                transformVariableAssignment((VariableAssignment) child, globalVariables);
-            }
-
-            if (child instanceof Stylerule) {
-                var stylerule = (Stylerule) child;
-                stylerule.body = transformRuleBody(stylerule.body, globalVariables);
+            switch (child) {
+                case VariableAssignment va -> {
+                    globalVariables.addFirst((VariableAssignment) child);
+                    transformVariableAssignment((VariableAssignment) child, globalVariables);
+                }
+                case Stylerule sr -> sr.body = transformRuleBody(sr.body, globalVariables);
+                default -> throw new IllegalStateException("Unexpected AST node type: " + child.getClass().getSimpleName());
             }
         }
     }
@@ -36,19 +36,17 @@ public class Evaluator implements Transform {
     private ArrayList<ASTNode> transformRuleBody(ArrayList<ASTNode> body, HANLinkedList<VariableAssignment> scopeVars) {
         var temp = new ArrayList<ASTNode>();
         for (var child : body) {
-            if (child instanceof VariableAssignment) {
-                scopeVars.addFirst((VariableAssignment) child);
-                transformVariableAssignment((VariableAssignment) child, scopeVars);
-            }
-
-            if (child instanceof Declaration) {
-                transformDeclaration((Declaration) child, scopeVars);
-                temp.add(child);
-                //System.out.println(temp.toString());
-            }
-
-            if (child instanceof IfClause) {
-                temp.addAll(transformIfClause((IfClause) child, scopeVars));
+            switch (child) {
+                case VariableAssignment v -> {
+                    scopeVars.addFirst((VariableAssignment) child);
+                    transformVariableAssignment((VariableAssignment) child, scopeVars);
+                }
+                case Declaration d -> {
+                    transformDeclaration((Declaration) child, scopeVars);
+                    temp.add(child);
+                }
+                case IfClause i -> temp.addAll(transformIfClause((IfClause) child, scopeVars));
+                default -> throw new IllegalStateException("Unexpected value: " + child);
             }
         }
         return temp;
@@ -64,36 +62,26 @@ public class Evaluator implements Transform {
 
     private ArrayList<ASTNode> transformIfClause(IfClause ifClause, HANLinkedList<VariableAssignment> scopeVars) {
         ifClause.conditionalExpression = transformExpression(ifClause.conditionalExpression, scopeVars);
-        //System.out.println("con "+ ifClause.conditionalExpression);
 
-        if (((BoolLiteral) ifClause.conditionalExpression).value) {
-            ifClause.elseClause= null;
-        }
-        else {
+        assert ifClause.conditionalExpression != null;
+        if (!((BoolLiteral) ifClause.conditionalExpression).value) {
             if (ifClause.elseClause == null) {
                 ifClause.body = new ArrayList<>();
-            }
-            else {
+            } else {
                 ifClause.body = ifClause.elseClause.body;
-                ifClause.elseClause = null;
             }
         }
+        ifClause.elseClause= null;
         return transformRuleBody(ifClause.body, scopeVars);
     }
 
     private Literal transformExpression(Expression expression, HANLinkedList<VariableAssignment> scopeVars) {
-        if (expression instanceof Operation) {
-            return transformOperation((Operation) expression, scopeVars);
-        }
-
-        if (expression instanceof VariableReference) {
-            return getVariableLiteral((VariableReference) expression, scopeVars);
-        }
-
-        if (expression instanceof Literal) {
-            return (Literal) expression;
-        }
-        return null;
+        return switch (expression) {
+            case Operation o -> transformOperation((Operation) expression, scopeVars);
+            case VariableReference vr -> getVariableLiteral((VariableReference) expression, scopeVars);
+            case Literal l -> (Literal) expression;
+            default -> null;
+        };
     }
 
     private Literal transformOperation(Operation operation, HANLinkedList<VariableAssignment> scopeVars) {
@@ -104,19 +92,15 @@ public class Evaluator implements Transform {
         var rightValue= getLiteralValue(rightLiteral);;
         System.out.println("value "+ leftValue + "|" + rightValue);
 
-        if (operation instanceof AddOperation) {
-            return createSumLiteral(leftLiteral, leftValue + rightValue);
-        }
-        if (operation instanceof SubtractOperation) {
-            return createSumLiteral(leftLiteral, leftValue - rightValue);
-        }
-        if (operation instanceof MultiplyOperation) {
-            var type = leftLiteral instanceof ScalarLiteral ? rightLiteral : leftLiteral;
-            return createSumLiteral(type, leftValue * rightValue);
-        }
-
-        System.out.println("transformOperation returned null");
-        return null;
+        return switch (operation) {
+            case AddOperation ao -> createSumLiteral(leftLiteral, leftValue + rightValue);
+            case SubtractOperation so -> createSumLiteral(leftLiteral, leftValue + rightValue);
+            case MultiplyOperation mo -> {
+                var type = leftLiteral instanceof ScalarLiteral ? rightLiteral : leftLiteral;
+                yield createSumLiteral(type, leftValue * rightValue);
+            }
+            default -> null;
+        };
     }
 
     private Literal getVariableLiteral(VariableReference variableReference, HANLinkedList<VariableAssignment> scopeVars) {
@@ -126,27 +110,26 @@ public class Evaluator implements Transform {
             var variableAssignment = currentNode.getValue();
             var name = variableAssignment.name.name;
             if (name.equals(variableReference.name)) {
-                //System.out.println("getVariableLiteral returned " + variableAssignment.expression.toString());
                 return (Literal) variableAssignment.expression;
             }
             currentNode = currentNode.getNext();
         }
-
-        System.out.println("getVariableLiteral returned null");
         return null;
     }
 
     private int getLiteralValue(Literal literal){
-        if (literal instanceof PercentageLiteral) return ((PercentageLiteral) literal).value;
-        if (literal instanceof PixelLiteral) return ((PixelLiteral) literal).value;
-        return ((ScalarLiteral) literal).value;
+        return switch (literal) {
+            case PercentageLiteral pel -> ((PercentageLiteral) literal).value;
+            case PixelLiteral pil -> ((PixelLiteral) literal).value;
+            default -> ((ScalarLiteral) literal).value;
+        };
     }
 
     private Literal createSumLiteral(Literal type, int value) {
-        if (type instanceof PercentageLiteral) return new PercentageLiteral(value);
-        if (type instanceof PixelLiteral) return new PixelLiteral(value);
-        return new ScalarLiteral(value);
+        return switch (type) {
+            case PercentageLiteral pel -> new PercentageLiteral(value);
+            case PixelLiteral pil -> new PixelLiteral(value);
+            default -> new ScalarLiteral(value);
+        };
     }
-
-    
 }
