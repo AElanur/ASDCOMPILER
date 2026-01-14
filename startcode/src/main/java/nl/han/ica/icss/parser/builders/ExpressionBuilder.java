@@ -19,8 +19,6 @@ public class ExpressionBuilder {
     public void enterExpression(ICSSParser.ExpressionContext ctx) {
         if(ctx.getChildCount() == 3) {
             var operator = ctx.getChild(1).getText();
-            System.out.println(Objects.equals(operator, "*"));
-            System.out.println(Objects.equals(operator, "+"));
             stack.push(switch (operator) {
                 case "*" -> new MultiplyOperation();
                 case "+" -> new AddOperation();

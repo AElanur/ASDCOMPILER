@@ -93,30 +93,24 @@ public class Evaluator implements Transform {
         if (expression instanceof Literal) {
             return (Literal) expression;
         }
-
-        System.out.println("transformExpression returned null");
         return null;
     }
 
     private Literal transformOperation(Operation operation, HANLinkedList<VariableAssignment> scopeVars) {
         Literal leftLiteral = transformExpression(operation.lhs, scopeVars);
         Literal rightLiteral = transformExpression(operation.rhs, scopeVars);
-        //System.out.println("literal "+ leftLiteral.toString() + rightLiteral.toString());
 
         var leftValue = getLiteralValue(leftLiteral);
         var rightValue= getLiteralValue(rightLiteral);;
         System.out.println("value "+ leftValue + "|" + rightValue);
 
         if (operation instanceof AddOperation) {
-            System.out.println("Add "+ (leftValue + rightValue));
             return createSumLiteral(leftLiteral, leftValue + rightValue);
         }
         if (operation instanceof SubtractOperation) {
-            System.out.println("Sub "+ (leftValue - rightValue));
             return createSumLiteral(leftLiteral, leftValue - rightValue);
         }
         if (operation instanceof MultiplyOperation) {
-            System.out.println("Mul "+ (leftValue * rightValue));
             var type = leftLiteral instanceof ScalarLiteral ? rightLiteral : leftLiteral;
             return createSumLiteral(type, leftValue * rightValue);
         }
