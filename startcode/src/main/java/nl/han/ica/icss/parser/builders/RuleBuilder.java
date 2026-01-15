@@ -14,12 +14,12 @@ public class RuleBuilder {
         this.stack = stack;
     }
     
-    public void enterStyleRule(ICSSParser.StyleRuleContext ctx) {
+    public void enterStyleRule() {
         Stylerule rule = new Stylerule();
         stack.push(rule);
     }
 
-    public void exitStyleRule(ICSSParser.StyleRuleContext ctx) {
+    public void exitStyleRule() {
         var node = stack.pop();
         stack.peek().addChild(node);
     }
@@ -28,7 +28,7 @@ public class RuleBuilder {
         stack.push(new ClassSelector(ctx.getText()));
     }
 
-    public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
+    public void exitClassSelector() {
         var temp = stack.pop();
         stack.peek().addChild(temp);
     }
@@ -37,7 +37,7 @@ public class RuleBuilder {
         stack.push(new TagSelector(ctx.getText()));
     }
 
-    public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
+    public void exitTagSelector() {
         var node = stack.pop();
         stack.peek().addChild(node);
     }
@@ -46,7 +46,7 @@ public class RuleBuilder {
         stack.push(new IdSelector(ctx.getText()));
     }
 
-    public void exitIdSelector(ICSSParser.IdSelectorContext ctx) {
+    public void exitIdSelector() {
         var node = stack.pop();
         stack.peek().addChild(node);
     }

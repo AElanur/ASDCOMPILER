@@ -29,19 +29,19 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void enterStyleRule(ICSSParser.StyleRuleContext ctx) {
-		ruleBuilder.enterStyleRule(ctx);
+		ruleBuilder.enterStyleRule();
 	}
 
 	@Override public void exitStyleRule(ICSSParser.StyleRuleContext ctx) {
-		ruleBuilder.exitStyleRule(ctx);
+		ruleBuilder.exitStyleRule();
 	}
 
 	@Override public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-		decalBuilder.enterVariableAssignment(ctx);
+		decalBuilder.enterVariableAssignment();
 	}
 
 	@Override public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
-		decalBuilder.exitVariableAssignment(ctx);
+		decalBuilder.exitVariableAssignment();
 	}
 
 	@Override public void enterVariableReference(ICSSParser.VariableReferenceContext ctx) {
@@ -49,11 +49,11 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
-		decalBuilder.enterDeclaration(ctx);
+		decalBuilder.enterDeclaration();
 	}
 
 	@Override public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
-		decalBuilder.exitDeclaration(ctx);
+		decalBuilder.exitDeclaration();
 	}
 
 	@Override public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {
@@ -85,7 +85,7 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void exitClassSelector(ICSSParser.ClassSelectorContext ctx) {
-		ruleBuilder.exitClassSelector(ctx);
+		ruleBuilder.exitClassSelector();
 	}
 
 	@Override public void enterIdSelector(ICSSParser.IdSelectorContext ctx) {
@@ -93,7 +93,7 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void exitIdSelector(ICSSParser.IdSelectorContext ctx) {
-		ruleBuilder.exitIdSelector(ctx);
+		ruleBuilder.exitIdSelector();
 	}
 
 	@Override public void enterTagSelector(ICSSParser.TagSelectorContext ctx) {
@@ -101,7 +101,7 @@ public class ASTListener extends ICSSBaseListener {
 	}
 
 	@Override public void exitTagSelector(ICSSParser.TagSelectorContext ctx) {
-		ruleBuilder.exitTagSelector(ctx);
+		ruleBuilder.exitTagSelector();
 	}
 
 	@Override
@@ -116,21 +116,21 @@ public class ASTListener extends ICSSBaseListener {
 
 	@Override
 	public void enterIfClause(ICSSParser.IfClauseContext ctx) {
-		expBuilder.enterIfClause(ctx);
+		expBuilder.enterIfClause();
 	}
 
 	@Override
 	public void exitIfClause(ICSSParser.IfClauseContext ctx) {
-		expBuilder.exitIfClause(ctx);
+		expBuilder.exitIfClause();
 	}
 
 	@Override
 	public void enterElseClause(ICSSParser.ElseClauseContext ctx) {
-		expBuilder.enterElseClause(ctx);
+		expBuilder.enterElseClause();
 	}
 
 	@Override
 	public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
-		expBuilder.exitElseClause(ctx);
+		expBuilder.exitElseClause();
 	}
 }

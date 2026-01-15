@@ -13,21 +13,21 @@ public class DeclarationBuilder {
         this.stack = stack;
     }
     
-    public void enterDeclaration(ICSSParser.DeclarationContext ctx) {
+    public void enterDeclaration() {
         Declaration decl = new Declaration();
         stack.push(decl);
     }
 
-    public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
+    public void exitDeclaration() {
         var declaration = stack.pop();
         stack.peek().addChild(declaration);
     }
 
-    public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+    public void enterVariableAssignment() {
         stack.push(new VariableAssignment());
     }
 
-    public void exitVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {
+    public void exitVariableAssignment() {
         var node = stack.pop();
         stack.peek().addChild(node);
     }

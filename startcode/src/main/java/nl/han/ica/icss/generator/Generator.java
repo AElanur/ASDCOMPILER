@@ -25,17 +25,16 @@ public class Generator {
 
 	private void generateStyleRule(Stylerule stylerule, StringBuilder sb) {
 		if (stylerule.selectors == null || stylerule.selectors.isEmpty()) {
-			System.err.println("Skipping rule with no selectors: " + stylerule);
-			return;
+			throw new IllegalStateException("Style rule requires at least one selector");
 		}
-		var selector = stylerule.selectors.getFirst().toString();
+        var selector = stylerule.selectors.getFirst().toString();
 		sb.append(selector).append(" {\n");
-		for (var child : stylerule.body) {
-			switch (child) {
-				case Declaration d -> generateDeclaration((Declaration) child, sb);
-				case IfClause ic -> generateIfClause((IfClause) child, sb);
-				case ElseClause ec -> generateElseClause((ElseClause) child, sb);
-				default -> System.out.println("Unidentified child.");
+		for (var childNode : stylerule.body) {
+			switch (childNode) {
+				case Declaration _ -> generateDeclaration((Declaration) childNode, sb);
+				case IfClause _ -> generateIfClause((IfClause) childNode, sb);
+				case ElseClause _ -> generateElseClause((ElseClause) childNode, sb);
+				default -> System.out.println("Unidentified child: " + childNode);
 			}
 		}
 		sb.append("}");
@@ -52,6 +51,7 @@ public class Generator {
 	private void generateIfClause(IfClause ifClause, StringBuilder sb) {
 		sb.append("    if[").append(ifClause.conditionalExpression.toString()).append("] {\n");
 
+		// Controleer wat er binnen in de if clause is.
 		for (var inner : ifClause.body) {
 			switch (inner) {
 				case Declaration d -> generateDeclaration(d, sb);
@@ -70,8 +70,8 @@ public class Generator {
 
 	private String getLiteralValue(Expression literal){
 		return switch (literal) {
-			case PercentageLiteral pel -> ((PercentageLiteral) literal).value + "%";
-			case PixelLiteral pil -> ((PixelLiteral) literal).value + "px";
+			case PercentageLiteral _ -> ((PercentageLiteral) literal).value + "%";
+			case PixelLiteral _ -> ((PixelLiteral) literal).value + "px";
 			default -> String.valueOf(((ColorLiteral) literal).value);
 		};
 	}

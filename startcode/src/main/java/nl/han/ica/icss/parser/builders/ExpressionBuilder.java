@@ -34,21 +34,21 @@ public class ExpressionBuilder {
         }
     }
 
-    public void enterIfClause(ICSSParser.IfClauseContext ctx) {
+    public void enterIfClause() {
         stack.push(new IfClause());
     }
     
-    public void exitIfClause(ICSSParser.IfClauseContext ctx) {
+    public void exitIfClause() {
         var ifClause = stack.pop();
         stack.peek().addChild(ifClause);
     }
     
-    public void enterElseClause(ICSSParser.ElseClauseContext ctx) {
+    public void enterElseClause() {
         var elseClause = new ElseClause();
         stack.push(elseClause);
     }
 
-    public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
+    public void exitElseClause() {
         var elseClause = stack.pop();
         stack.peek().addChild(elseClause);
     }
