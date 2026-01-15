@@ -19,8 +19,8 @@ public class DeclarationBuilder {
     }
 
     public void exitDeclaration(ICSSParser.DeclarationContext ctx) {
-        Declaration decl = (Declaration) stack.pop();
-        stack.peek().addChild(decl);
+        var declaration = stack.pop();
+        stack.peek().addChild(declaration);
     }
 
     public void enterVariableAssignment(ICSSParser.VariableAssignmentContext ctx) {

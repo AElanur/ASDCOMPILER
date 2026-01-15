@@ -7,8 +7,6 @@ import nl.han.ica.icss.ast.operations.MultiplyOperation;
 import nl.han.ica.icss.ast.operations.SubtractOperation;
 import nl.han.ica.icss.parser.ICSSParser;
 
-import java.util.Objects;
-
 public class ExpressionBuilder {
     private IHANStack<ASTNode> stack;
     private final int sumExpression = 3;
@@ -41,15 +39,18 @@ public class ExpressionBuilder {
     }
     
     public void exitIfClause(ICSSParser.IfClauseContext ctx) {
-        stack.peek().addChild(stack.pop());
+        var ifClause = stack.pop();
+        stack.peek().addChild(ifClause);
     }
     
     public void enterElseClause(ICSSParser.ElseClauseContext ctx) {
-        stack.push(new ElseClause());
+        var elseClause = new ElseClause();
+        stack.push(elseClause);
     }
 
     public void exitElseClause(ICSSParser.ElseClauseContext ctx) {
-        stack.peek().addChild(stack.pop());
+        var elseClause = stack.pop();
+        stack.peek().addChild(elseClause);
     }
 
     public void enterPropertyName(ICSSParser.PropertyNameContext ctx) {

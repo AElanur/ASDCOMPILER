@@ -31,9 +31,37 @@ public class Generator {
 		var selector = stylerule.selectors.getFirst().toString();
 		sb.append(selector).append(" {\n");
 		for (var child : stylerule.body) {
-			generateDeclaration((Declaration) child, sb);
+			switch (child) {
+				case Declaration d -> generateDeclaration((Declaration) child, sb);
+				case IfClause ic -> generateIfClause((IfClause) child, sb);
+				case ElseClause ec -> generateElseClause((ElseClause) child, sb);
+				default -> System.out.println("Unidentified child.");
+			}
 		}
 		sb.append("}");
+	}
+
+	private void generateElseClause(ElseClause elseClause, StringBuilder sb) {
+		sb.append("    } else {\n");
+		for (var inner : elseClause.body) {
+			generateDeclaration((Declaration) inner, sb);
+		}
+		sb.append("    }\n");
+	}
+
+	private void generateIfClause(IfClause ifClause, StringBuilder sb) {
+		sb.append("    if[").append(ifClause.conditionalExpression.toString()).append("] {\n");
+
+		for (var inner : ifClause.body) {
+			switch (inner) {
+				case Declaration d -> generateDeclaration(d, sb);
+				case IfClause nested -> generateIfClause(nested, sb);
+				case ElseClause elseClause -> generateElseClause(elseClause, sb);
+				default -> System.out.println("Unidentified node");
+			}
+		}
+
+		sb.append("    }\n");
 	}
 
 	private void generateDeclaration(Declaration declaration, StringBuilder sb) {

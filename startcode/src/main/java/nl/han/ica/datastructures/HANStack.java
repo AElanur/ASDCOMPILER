@@ -27,6 +27,6 @@ public class HANStack<T> implements IHANStack<T> {
 
     @Override
     public boolean isEmpty() {
-        return list.getFirst() == null;
+        return list.getSize() == 0;
     }
 }
